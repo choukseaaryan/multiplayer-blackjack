@@ -407,7 +407,7 @@ const Room = () => {
                 }`}
               >
                 {/* Overlay for players who are out */}
-                {player?.is_out && gameStarted && (
+                {player?.is_out && (!currentPlayer?.is_host || gameStarted) && (
                   <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center text-white text-2xl font-bold rounded-lg">
                     Busted
                   </div>
