@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: aliceblue;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.register__container {
+  background-color: white;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  padding: 50px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+  max-width: 1000px;
+}
+
+.login__form h4 {
+  margin: 20px 0 10px;
+}
+
+.login__form input {
+  box-sizing: border-box;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  color: black;
+}
+
+.login__form input:focus {
+  outline: none;
+}
+
+.password__container {
+  position: relative;
+}
+
+.password__input {
+  padding-right: 40px;
+}
+
+.toggle__passwordBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 18px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.register__form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .register__form {
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+  }
+}
+
+.register__form h4 {
+  margin: 20px 0 10px;
+}
+
+.register__form input:not([type="radio"]):not([type="checkbox"]),
+.register__form select {
+  box-sizing: border-box;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.register__form input:focus {
+  outline: none;
+}
+
+.register__button {
+  color: white;
+  background-color: #754ef9;
+  border: #754ef9 solid 1px;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.register__button:hover {
+  background-color: white;
+  color: #754ef9;
+  transition: all 0.2s ease-in-out;
+  border: #754ef9 solid 1px;
+}
