@@ -362,6 +362,11 @@ const Room = () => {
                 Busted
               </div>
             )}
+            {currentPlayer?.is_stand && (
+              <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center text-white text-2xl font-bold rounded-lg">
+                Stood
+              </div>
+            )}
             <img
               src={currentPlayer?.img || playerImg} // Use player image if available
               alt={`Current Player`}
@@ -412,6 +417,12 @@ const Room = () => {
                     Busted
                   </div>
                 )}
+                {player?.is_stand &&
+                  (!currentPlayer?.is_host || gameStarted) && (
+                    <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center text-white text-2xl font-bold rounded-lg">
+                      Stood
+                    </div>
+                  )}
                 <img
                   key={index}
                   src={player?.img || playerImg} // Use player image if available
