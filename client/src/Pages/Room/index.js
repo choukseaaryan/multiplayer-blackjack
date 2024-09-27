@@ -330,7 +330,7 @@ const Room = () => {
                     const handLength = currentPlayer.cards_in_hand.length;
                     return (
                       <motion.img
-                        key={`${card.value}-of-${card.suit}`}
+                        key={`${card.value}-of-${card.suit}-${i}`}
                         src={require(`../../images/cards/${card.suit}/${card.value}.png`)}
                         alt={`${card.value} of ${card.suit}`}
                         className="w-16 h-auto transition-all"
@@ -356,6 +356,12 @@ const Room = () => {
               currentPlayer?.is_chance ? "border-yellow-400" : "border-black"
             } -top-10`}
           >
+            {/* Overlay for players who are out */}
+            {currentPlayer?.is_out && (
+              <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center text-white text-2xl font-bold rounded-lg">
+                Busted
+              </div>
+            )}
             <img
               src={currentPlayer?.img || playerImg} // Use player image if available
               alt={`Current Player`}
@@ -400,6 +406,12 @@ const Room = () => {
                   player?.is_chance ? "border-yellow-400" : "border-black"
                 }`}
               >
+                {/* Overlay for players who are out */}
+                {player?.is_out && gameStarted && (
+                  <div className="absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center text-white text-2xl font-bold rounded-lg">
+                    Busted
+                  </div>
+                )}
                 <img
                   key={index}
                   src={player?.img || playerImg} // Use player image if available
@@ -410,8 +422,9 @@ const Room = () => {
                   <p>{player?.username}</p>
                   {currentPlayer?.is_host && (
                     <button
+                      disabled={gameStarted}
                       onClick={() => handleKickPlayer(player?.id)}
-                      className="mt-2 px-3 py-1 bg-red-500 text-white rounded-md"
+                      className="mt-2 px-3 py-1 bg-red-500 text-white rounded-md disabled:bg-gray-600 disabled:text-gray-200"
                     >
                       Kick
                     </button>
@@ -433,7 +446,7 @@ const Room = () => {
               className="bg-gray-800 text-white border border-amber-500 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-amber-500 transition duration-200"
               value={betSize} // Assuming betSize is a state variable
               onChange={(e) => updateBetSize(e.target.value)} // Call the function on change
-              disabled={gameStarted}
+              disabled={gameStarted || !currentPlayer?.is_host}
             >
               <option value="10">10</option>
               <option value="20">20</option>
