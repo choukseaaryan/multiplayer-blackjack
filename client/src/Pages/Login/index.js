@@ -160,7 +160,7 @@ const Login = () => {
                 value={data.username}
                 placeholder="Enter Username"
                 onChange={changeHandler}
-                maxLength={10}
+                maxLength={24}
               />
               <button
                 onClick={createRoomHandler}

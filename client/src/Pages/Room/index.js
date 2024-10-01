@@ -155,7 +155,7 @@ const Room = () => {
         case 0:
           player.position = {
             x: 280,
-            y: -150,
+            y: -170,
             initialCardX: -310
           };
           break;
@@ -169,7 +169,7 @@ const Room = () => {
         case 2:
           player.position = {
             x: -400,
-            y: -150,
+            y: -170,
             initialCardX: 310
           };
           break;
@@ -383,8 +383,8 @@ const Room = () => {
               alt={`Current Player`}
               className="rounded-full w-20 h-20"
             />
-            <div className="text-white ">
-              <p>{currentPlayer?.username}</p>
+            <div className="text-white text-wrap max-w-32 break-words">
+              {currentPlayer?.username}
             </div>
           </div>
           {players?.map((player, index) => (
@@ -430,7 +430,7 @@ const Room = () => {
                 </div>
               )}
               <div
-                className={`px-3 py-2 flex max-w-52 gap-3 bg-black rounded-lg border-4 ${
+                className={`px-3 py-2 flex max-w-60 gap-3 bg-black rounded-lg border-4 ${
                   player?.is_chance ? "border-yellow-400" : "border-black"
                 }`}
               >
@@ -452,7 +452,7 @@ const Room = () => {
                   alt={`Player ${index + 1}`}
                   className="rounded-full w-20 h-20"
                 />
-                <div className="text-white mt-2">
+                <div className="text-white mt-2 max-w-32 text-wrap break-words">
                   <p>{player?.username}</p>
                   {currentPlayer?.is_host && (
                     <button
