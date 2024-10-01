@@ -156,24 +156,28 @@ const Room = () => {
           player.position = {
             x: 280,
             y: -150,
+            initialCardX: -310
           };
           break;
         case 1:
           player.position = {
             x: 280,
             y: 80,
+            initialCardX: -310,
           };
           break;
         case 2:
           player.position = {
             x: -400,
-            y: 80,
+            y: -150,
+            initialCardX: 310
           };
           break;
         case 3:
           player.position = {
             x: -400,
-            y: -150,
+            y: 80,
+            initialCardX: 310
           };
           break;
         default:
@@ -278,7 +282,7 @@ const Room = () => {
           <img
             src={dealerImg}
             alt="dealer"
-            className="h-28 relative top-10 -mt-10 z-10 rounded-lg"
+            className="h-28 relative top-11 -mt-10 z-10 rounded-lg"
           />
           <div
             className="flex justify-center items-center w-[800px] h-[400px] rounded-full border-[10px] border-amber-950 relative"
@@ -334,10 +338,17 @@ const Room = () => {
                         src={require(`../../images/cards/${card.suit}/${card.value}.png`)}
                         alt={`${card.value} of ${card.suit}`}
                         className="w-16 h-auto transition-all"
-                        initial={{ opacity: 0, x: i * -40, y: -400 }}
+                        initial={{
+                          opacity: 0,
+                          x: i * -40,
+                          y: -400,
+                          rotate: 180,
+                          scale: 0.2,
+                        }}
                         animate={{
                           opacity: 1,
                           transform: `rotate(${cardOffsets[handLength].angleOffset[i]}deg) translateX(${cardOffsets[handLength].XOffset[i]}px) translateY(${cardOffsets[handLength].YOffset[i]}px)`,
+                          scale: 1,
                         }}
                         transition={{ duration: 0.5, delay: i * 0.2 }} // Stagger the cards
                       />
@@ -389,14 +400,26 @@ const Room = () => {
                 {player?.cards_in_hand?.length > 0 &&
                   player.cards_in_hand.map((card, i) => {
                     return (
-                      <img
+                      <motion.img
                         key={`${card.value}-of-${card.suit}-${i}`}
                         src={require(`../../images/cards/${card.suit}/${card.value}.png`)}
                         alt={`${card.value} of ${card.suit}`}
                         className={`w-16 h-auto`}
-                        style={{
-                          transform: `translateX(-${i * 40}px)`,
+                        initial={{
+                          opacity: 0,
+                          x: `${player.position.initialCardX - i * 40}px`,
+                          y: `${index % 2 ? "-220px" : 0}`,
+                          scale: 0.1,
+                          rotate: 180
                         }}
+                        animate={{
+                          opacity: 1,
+                          x: i * -40,
+                          y: 0,
+                          scale: 1,
+                          rotate: 0
+                        }}
+                        transition={{ duration: 0.5, delay: i * 0.2 }} // Stagger the cards
                       />
                     );
                   })}
