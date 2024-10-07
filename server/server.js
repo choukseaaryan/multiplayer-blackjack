@@ -482,20 +482,21 @@ io.on("connection", (socket) => {
     let gameStatusChecked = false;
 
     function checkGameStatus(roomId) {
-        const room = rooms[roomId];
-        const allPlayersStood = Object.values(room.players).every(
-            (player) => player.is_stand || player.is_out
-        );
-
-        if (allPlayersStood && !gameStatusChecked) {
-            gameStatusChecked = true; // Set flag to true
-            const result = determineWinner(room.players, roomId);
-            io.to(roomId).emit("gameEnded", "info", result);
-            rooms[roomId].can_join = true;
-        } else if (!allPlayersStood) {
-            gameStatusChecked = false; // Reset flag if players can still play
-        }
+      const room = rooms[roomId];
+      const allPlayersStood = Object.values(room.players).every(
+        (player) => player.is_stand || player.is_out
+      );
+  
+      if (allPlayersStood && !gameStatusChecked) {
+        gameStatusChecked = true; // Set flag to true
+        const winners = determineWinner(room.players, roomId);
+        io.to(roomId).emit("gameEnded", winners); // Emit winners and amounts
+        rooms[roomId].can_join = true;
+      } else if (!allPlayersStood) {
+        gameStatusChecked = false; // Reset flag if players can still play
+      }
     }
+
 
 
     function createDeck() {
@@ -581,37 +582,36 @@ io.on("connection", (socket) => {
         }
     }
 
-    let cnt = 0;
     function determineWinner(players, roomId) {
         let highestScore = 0;
         let winners = [];
-
+    
         Object.values(players).forEach((player) => {
             if (!player.is_out && player.cards_sum <= 21) {
                 if (player.cards_sum > highestScore) {
                     highestScore = player.cards_sum;
-                    winners = [player.username];
+                    winners = [{ name: player.username, amount: 0 }];
                 } else if (player.cards_sum === highestScore) {
-                    winners.push(player.username);
+                    winners.push({ name: player.username, amount: 0 });
                 }
             }
         });
-
+    
         const potAmount = rooms[roomId].pot_amount;
         const numberOfWinners = winners.length;
         let distribution = numberOfWinners > 0 ? potAmount / numberOfWinners : 0;
-        cnt++;
+    
         winners.forEach(winner => {
-            const player = Object.values(players).find(p => p.username === winner);
+            const player = Object.values(players).find(p => p.username === winner.name);
             if (player) {
                 player.balance += distribution;
+                winner.amount = distribution; // Store the amount won by each winner
             }
         });
-
+    
         rooms[roomId].pot_amount = 0;
-
-        return winners.length > 0
-            ? `Winner${numberOfWinners > 1 ? "s" : ""}: ${winners.join(", ")}`
-            : "No winner";
+    
+        return winners;
     }
+    
 });

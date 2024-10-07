@@ -23,6 +23,8 @@ const Room = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState(0);
+  const [winners, setWinners] = useState([]);
+  const [showWinOverlay, setShowWinOverlay] = useState(false);
 
   // Effect to handle window resize
   useEffect(() => {
@@ -60,6 +62,18 @@ const Room = () => {
   useEffect(() => {
     if (!socket || !roomId) return; // Early return if socket is not initialized
 
+    const handleWinEvent = (winners) => {
+      setWinners(winners); // Set the winners array
+      setShowWinOverlay(true); // Show the overlay
+      setGameStarted(false);
+
+      // Automatically hide the overlay after a delay
+      setTimeout(() => {
+        setShowWinOverlay(false);
+        setWinners([]); // Clear winners after displaying
+      }, 3000); // Duration for the overlay to be visible
+    };
+
     const handleReturningPlayerList = (updatedPlayers) => {
       // Find the current player based on socket.id
       const tempCurrentPlayer = updatedPlayers?.find(
@@ -77,11 +91,6 @@ const Room = () => {
       );
       // Update the players state with the filtered list
       setPlayers(setPlayerPositions(otherPlayers));
-    };
-
-    const handleGameEnded = (type, message) => {
-      showToast(type, message);
-      setGameStarted(false);
     };
 
     const handleBetSizeUpdate = (value) => {
@@ -109,7 +118,7 @@ const Room = () => {
     socket.on("updatePlayerList", handleReturningPlayerList);
     socket.on("updatePlayers", handleReturningPlayerList);
     socket.on("betSizeUpdated", handleBetSizeUpdate);
-    socket.on("gameEnded", handleGameEnded);
+    socket.on("gameEnded", handleWinEvent);
     socket.on("playerJoined", showToast);
     socket.on("playerLeft", showToast);
     socket.on("lessPlayersError", showToast);
@@ -156,7 +165,7 @@ const Room = () => {
           player.position = {
             x: 280,
             y: -170,
-            initialCardX: -310
+            initialCardX: -310,
           };
           break;
         case 1:
@@ -170,14 +179,14 @@ const Room = () => {
           player.position = {
             x: -400,
             y: -170,
-            initialCardX: 310
+            initialCardX: 310,
           };
           break;
         case 3:
           player.position = {
             x: -400,
             y: 80,
-            initialCardX: 310
+            initialCardX: 310,
           };
           break;
         default:
@@ -360,6 +369,24 @@ const Room = () => {
                   </div>
                 )}
               </div>
+              {showWinOverlay && (
+                <motion.div
+                  className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-70"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="bg-white p-4 rounded-lg text-center">
+                    <h2 className="text-xl font-bold">Congratulations!</h2>
+                    {winners?.map((winner, index) => (
+                      <p key={index} className="mt-2">
+                        {winner.name} wins ${winner.amount}!
+                      </p>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
           </div>
           <div
@@ -410,14 +437,14 @@ const Room = () => {
                           x: `${player.position.initialCardX - i * 40}px`,
                           y: `${index % 2 ? "-220px" : 0}`,
                           scale: 0.1,
-                          rotate: 180
+                          rotate: 180,
                         }}
                         animate={{
                           opacity: 1,
                           x: i * -40,
                           y: 0,
                           scale: 1,
-                          rotate: 0
+                          rotate: 0,
                         }}
                         transition={{ duration: 0.5, delay: i * 0.2 }} // Stagger the cards
                       />
