@@ -140,8 +140,6 @@ function leaveRoom(socket, roomId, io) {
       delete rooms[roomId];
     }
   }
-
-  console.log(`Left: ${JSON.stringify(rooms, null, 2)}`);
 }
 
 function disconnectRoom(socket, io) {
