@@ -7,6 +7,7 @@ export const GameProvider = ({ children }) => {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
   const [socket, setSocket] = useState(null);
+  const [currentPlayer, setCurrentPlayer] = useState({});
 
   useEffect(() => {
     const newSocket = io("http://localhost:8000");
@@ -20,6 +21,7 @@ export const GameProvider = ({ children }) => {
   const updateUsername = (username) => setUsername(username);
   const updateRoomId = (id) => setRoomId(id);
   const updateSocket = (socket) => setSocket(socket);
+  const updateCurrentPlayer = (player) => setCurrentPlayer(player);
 
   const updateData = (data) => {
     setUsername(data?.username);
@@ -32,10 +34,12 @@ export const GameProvider = ({ children }) => {
         username,
         roomId,
         socket,
+        currentPlayer,
         updateUsername,
         updateRoomId,
         updateData,
         updateSocket,
+        updateCurrentPlayer
       }}
     >
       {children}
