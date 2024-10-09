@@ -41,7 +41,7 @@ const WinOverlay = ({ setGameStarted }) => {
           transition={{ duration: 0.5, type: "spring" }}
         >
           <div className="bg-white p-4 rounded-lg text-center">
-            <h2 className="text-xl font-bold">Congratulations!</h2>
+            <h2 className="text-xl font-bold">{winners.length > 0 ? "Congratulations!" : "No Winners..."}</h2>
             {winners?.map((winner, index) => (
               <p key={index} className="mt-2">
                 {winner?.name || ""} wins ${winner?.amount || 0}!

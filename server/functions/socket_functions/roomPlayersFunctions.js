@@ -66,10 +66,12 @@ function playerHits(socket, roomId, playerId, io) {
             );
             player.is_out = true;
             player.is_busted = true;
+        } else if (player.cards_sum === 21) {
+          player.is_stand = true;
         }
         checkGameStatus(roomId, io);
         updatePlayerList(roomId, io);
-        toggleChance(roomId, room, playerId, io);
+        toggleChance(roomId, playerId, io);
     }
 }
 
@@ -90,13 +92,12 @@ function playerStands(socket, roomId, playerId, io) {
         const player = room.players[playerId];
         player.is_stand = true; // Mark player as standing
         io.to(roomId).emit("playerStood", playerId, room.players);
-        toggleChance(roomId, room, playerId); // Call toggleChance to move to the next player
-        checkGameStatus(roomId, io); // Check game status after a player stands
+        toggleChance(roomId, playerId, io); // Call toggleChance to move to the next player
     }
     checkGameStatus(roomId, io);
 }
 
-function playerMessages(socket, roomId, playerId, message, io) {
+function playerMessages(roomId, playerId, message, io) {
     const player = rooms[roomId]?.players[playerId];
     if (player) {
         io.to(roomId).emit("receiveMessage", {

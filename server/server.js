@@ -56,5 +56,5 @@ io.on("connection", (socket) => {
     socket.on("hit", (roomId, playerId) => playerHits(socket, roomId, playerId, io));
     socket.on("stand", (roomId, playerId) => playerStands(socket, roomId, playerId, io));
     socket.on("getPlayerList", (roomid) => getPlayersList(socket, roomid, io));
-    socket.on("sendMessage", (roomId, playerId, message = "") => playerMessages(socket, roomId, playerId, message, io));
+    socket.on("sendMessage", (roomId, playerId, message = "") => playerMessages(roomId, playerId, message, io));
 });

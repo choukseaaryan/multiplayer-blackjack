@@ -1,4 +1,4 @@
-const { generateRoomID, isUsernameTakenInRoom, updatePlayerList } = require('../helper_functions/roomHelper.js')
+const { generateRoomID, isUsernameTakenInRoom, updatePlayerList, toggleChance } = require('../helper_functions/roomHelper.js')
 const { rooms, usernames, roomIDS } = require('../../global_data/roomData.js')
 const Deck = require("../../public/algorithm_drawCards.js");
 const {
@@ -70,7 +70,12 @@ function startGame(socket, roomId, io){
 
                 player.cards_in_hand = drawCards(deck, 2);
                 player.cards_sum = calculateCardSum(player.cards_in_hand);
-
+                if (player.cards_sum === 21) {
+                  player.is_stand = true;
+                  if (player.is_chance) {
+                    toggleChance(roomId, player.id, io);
+                  }
+                }
             } else {
                 socket.emit(
                     "insufficientBalanceError",
