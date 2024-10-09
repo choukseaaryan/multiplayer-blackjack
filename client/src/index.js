@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <GameProvider>
-      <ToastContainer newestOnTop closeOnClick />
+      <ToastContainer newestOnTop closeOnClick limit={3} />
       <Routes />
     </GameProvider>
   </React.StrictMode>

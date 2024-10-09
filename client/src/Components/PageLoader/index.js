@@ -20,7 +20,7 @@ const PageLoader = () => {
 				visible={true}
 				height="80"
 				width="80"
-				color="#754ef9"
+				color="green"
 				ariaLabel="grid-loading"
 				radius="12.5"
 				wrapperStyle={{}}
