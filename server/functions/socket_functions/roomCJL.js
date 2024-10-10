@@ -95,7 +95,7 @@ function joinRoom(socket, roomId, username, avatar, io) {
   rooms[roomId].player_count++;
 
   socket.join(roomId);
-  socket.emit("joinedRoom", roomId);
+  socket.emit("joinedRoom", roomId, rooms[roomId].bet_size);
   io.to(roomId).emit(
     "playerJoined",
     "info",
@@ -140,8 +140,6 @@ function leaveRoom(socket, roomId, io) {
       delete rooms[roomId];
     }
   }
-
-  console.log(`Left: ${JSON.stringify(rooms, null, 2)}`);
 }
 
 function disconnectRoom(socket, io) {

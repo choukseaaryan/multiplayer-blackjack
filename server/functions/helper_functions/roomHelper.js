@@ -53,7 +53,7 @@ function checkGameStatus(roomId, io) {
   if (allPlayersStood && !gameStatusChecked) {
     gameStatusChecked = true;
     const winners = determineWinner(room.players, roomId);
-    io.to(roomId).emit("gameEnded", winners);
+    io.to(roomId).emit("gameEnded", winners, Object.values(room.players));
     rooms[roomId].can_join = true;
   } else if (!allPlayersStood) {
     gameStatusChecked = false;

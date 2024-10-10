@@ -8,6 +8,7 @@ export const GameProvider = ({ children }) => {
   const [roomId, setRoomId] = useState("");
   const [socket, setSocket] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState({});
+  const [betSize, setBetSize] = useState(50);
 
   useEffect(() => {
     const newSocket = io("https://multiplayer-blackjack-api.onrender.com");
@@ -22,6 +23,7 @@ export const GameProvider = ({ children }) => {
   const updateRoomId = (id) => setRoomId(id);
   const updateSocket = (socket) => setSocket(socket);
   const updateCurrentPlayer = (player) => setCurrentPlayer(player);
+  const updateBetSize = (value) => setBetSize(value);
 
   const updateData = (data) => {
     setUsername(data?.username);
@@ -35,11 +37,13 @@ export const GameProvider = ({ children }) => {
         roomId,
         socket,
         currentPlayer,
+        betSize,
         updateUsername,
         updateRoomId,
         updateData,
         updateSocket,
-        updateCurrentPlayer
+        updateCurrentPlayer,
+        updateBetSize
       }}
     >
       {children}
