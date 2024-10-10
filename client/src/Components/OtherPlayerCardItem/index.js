@@ -5,7 +5,7 @@ import { GameContext } from "../../context";
 
 const OtherPlayerCardItem = ({ player, gameStarted, index }) => {
   const { socket, roomId, currentPlayer } = useContext(GameContext);
-  
+
   const handleKickPlayer = (id) => {
     socket.emit("kickPlayer", roomId, id);
   };
@@ -24,9 +24,13 @@ const OtherPlayerCardItem = ({ player, gameStarted, index }) => {
           player.cards_in_hand.map((card, i) => {
             return (
               <motion.img
-                key={`${card.value}-of-${card.suit}-${i}`}
-                src={require(`../../images/cards/${card.suit}/${card.value}.png`)}
-                alt={`${card.value} of ${card.suit}`}
+                key={i}
+                src={
+                  gameStarted
+                    ? require(`../../images/cards/card-back.jpg`)
+                    : require(`../../images/cards/${card.suit}/${card.value}.png`)
+                }
+                alt={`card`}
                 className={`w-16 h-auto`}
                 initial={{
                   opacity: 0,
@@ -47,7 +51,7 @@ const OtherPlayerCardItem = ({ player, gameStarted, index }) => {
             );
           })}
       </div>
-      {player?.cards_sum > 0 && (
+      {player?.cards_sum > 0 && !gameStarted && (
         <div className="absolute -top-10 rounded-full bg-black text-white px-2 py-1 z-2">
           {player?.cards_sum}
         </div>
