@@ -64,6 +64,7 @@ const Room = () => {
       navigate("/");
     };
 
+    const handleGameEnded = (winners, players) => handleReturningPlayerList(players);
     socket.emit("getPlayerList", roomId);
 
     // Listen for socket events
@@ -79,6 +80,7 @@ const Room = () => {
     socket.on("kicked", handleKicked);
     socket.on("playerKicked", showToast);
     socket.on("newHostAssigned", showToast);
+    socket.on("gameEnded", handleGameEnded);
 
     socket.on("gameStarted", (players) => {
       setGameStarted(true);
@@ -92,6 +94,7 @@ const Room = () => {
       socket.off("returningPlayerList");
       socket.off("updatePlayers");
       socket.off("gameStarted");
+      socket.off("gameEnded");
       socket.off("playerJoined");
       socket.off("playerLeft");
       socket.off("lessPlayersError");

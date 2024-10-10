@@ -9,7 +9,7 @@ import loginBg from "../../images/login-bg.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { updateData, socket } = useContext(GameContext);
+  const { updateData, socket, updateBetSize } = useContext(GameContext);
   const [data, setData] = useState({
     username: "",
     roomId: "",
@@ -20,9 +20,11 @@ const Login = () => {
   useEffect(() => {
     if (!socket) return; // Early return if socket is not initialized
 
-    const handleNavigation = (roomId) => {
+    const handleNavigation = (roomId, betSize) => {
       const payload = { ...data, roomId };
       updateData(payload);
+      if (betSize) updateBetSize(betSize);
+
       navigate("/room/" + roomId);
     };
 
@@ -46,7 +48,8 @@ const Login = () => {
       socket.off("matchStartedError");
       socket.off("lobbyFullError");
     };
-  }, [data, navigate, socket, updateData]);
+    // eslint-disable-next-line
+  }, [data, socket]);
 
   const joinRoomHandler = () => {
     if (!data.username) {

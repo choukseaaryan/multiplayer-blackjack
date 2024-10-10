@@ -63,31 +63,35 @@ function startGame(socket, roomId, io){
 
         let deck = createDeck();
         shuffleDeck(deck);
+        let canPlay = true;
 
         Object.values(rooms[roomId].players).forEach((player) => {
-            if (player.balance >= rooms[roomId].bet_size) {
-                player.balance -= rooms[roomId].bet_size;
-
-                player.cards_in_hand = drawCards(deck, 2);
-                player.cards_sum = calculateCardSum(player.cards_in_hand);
-                if (player.cards_sum === 21) {
-                  player.is_stand = true;
-                  if (player.is_chance) {
-                    toggleChance(roomId, player.id, io);
-                  }
-                }
-            } else {
-                socket.emit(
-                    "insufficientBalanceError",
-                    "error",
-                    `${player.username} does not have enough balance to place the bet.`
-                );
-                return;
-            }
+          if (player.balance < rooms[roomId].bet_size) canPlay = false;
         });
-
-        io.to(roomId).emit("gameStarted", Object.values(rooms[roomId]?.players));
-
+    
+        if (canPlay) {
+          Object.values(rooms[roomId].players).forEach((player) => {
+            player.balance -= rooms[roomId].bet_size;
+    
+            player.cards_in_hand = drawCards(deck, 2);
+            player.cards_sum = calculateCardSum(player.cards_in_hand);
+            if (player.cards_sum === 21) {
+              player.is_stand = true;
+              if (player.is_chance) {
+                toggleChance(roomId, player.id, io);
+              }
+            }
+          });
+    
+          io.to(roomId).emit("gameStarted", Object.values(rooms[roomId]?.players));
+        } else {
+          socket.emit(
+            "insufficientBalanceError",
+            "error",
+            `Some of the players do not have enough balance to place the bet.`
+          );
+          return;
+        }
     } else {
         console.log(`Room ${roomId} not found`);
     }

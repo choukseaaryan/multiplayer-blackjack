@@ -1,17 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { GameContext } from "../../context";
 import showToast from "../ShowToast";
 
 const RoomFooter = ({ balance = 0, isHost = false, gameStarted }) => {
-  const { socket, roomId } = useContext(GameContext);
-
-  const [betSize, setBetSize] = useState(50);
-
+  const { socket, roomId, betSize, updateBetSize } = useContext(GameContext);
   
   useEffect(() => {
     const handleBetSizeUpdate = (value) => {
       showToast("info", `Bet size updated to $${value}`);
-      setBetSize(value);
+      updateBetSize(value);
     };
 
     socket.on("betSizeUpdated", handleBetSizeUpdate);
@@ -21,9 +18,9 @@ const RoomFooter = ({ balance = 0, isHost = false, gameStarted }) => {
     }
   })
 
-  const updateBetSize = (value) => {
+  const changeBetSize = (value) => {
     socket.emit("betSizeChanged", roomId, value);
-    setBetSize(value);
+    updateBetSize(value);
   };
 
   return (
@@ -40,7 +37,7 @@ const RoomFooter = ({ balance = 0, isHost = false, gameStarted }) => {
           id="bet-size"
           className="bg-gray-800 text-white border border-amber-500 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-amber-500 transition duration-200"
           value={betSize} // Assuming betSize is a state variable
-          onChange={(e) => updateBetSize(e.target.value)} // Call the function on change
+          onChange={(e) => changeBetSize(e.target.value)} // Call the function on change
           disabled={gameStarted || !isHost}
         >
           <option value="10">10</option>
@@ -48,6 +45,7 @@ const RoomFooter = ({ balance = 0, isHost = false, gameStarted }) => {
           <option value="50">50</option>
           <option value="100">100</option>
           <option value="200">200</option>
+          <option value="800">800</option>
         </select>
       </div>
     </>
